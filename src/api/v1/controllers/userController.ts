@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import admin from "../config/firebase";
+import admin from "config/firebase"; 
+
 
 // Get user details
 export const getUserDetails = async (req: Request, res: Response) => {

@@ -1,20 +1,22 @@
 import { Request, Response } from "express";
-import admin from "config/firebase"; 
+import admin from "../../../../config/firebase"; // ✅ Ensure correct import path
 
-
-// Get user details
-export const getUserDetails = async (req: Request, res: Response) => {
+// ✅ Ensure function signature returns `Promise<void>` and modifies `res` directly
+export const getUserDetails = async (req: Request, res: Response): Promise<void> => {
     try {
         const uid = req.params.uid;
+
+        // Fetch user details from Firebase Auth
         const user = await admin.auth().getUser(uid);
 
-        return res.status(200).json({
+        // ✅ Modify `res` directly instead of returning a response
+        res.status(200).json({
             uid: user.uid,
             email: user.email,
             displayName: user.displayName,
-            role: user.customClaims?.role || "user", // Default to "user" if no role assigned
+            role: user.customClaims?.role || "user",
         });
     } catch (error) {
-        return res.status(500).json({ message: "Error fetching user details", error });
+        res.status(500).json({ message: "Error fetching user details", error });
     }
 };

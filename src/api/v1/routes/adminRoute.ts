@@ -1,8 +1,11 @@
-import { Router } from 'express';
-import adminController from '../controllers/adminController';
+import express from "express";
+import { getUserDetails } from "../controllers/userController"; // ✅ Ensure correct import
+import { setUserRole } from "../controllers/adminController"; // ✅ Ensure correct import
 
-const router = Router();
+const router = express.Router();
 
-router.get('/status', adminController.getStatus);
+// ✅ Pass the controller functions directly
+router.get("/user/:uid", getUserDetails);
+router.post("/admin/set-role", setUserRole);
 
 export default router;

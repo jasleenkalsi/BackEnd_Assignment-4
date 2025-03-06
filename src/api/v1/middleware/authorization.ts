@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { auth } from "config/firebase";
+import admin from "../../../../config/firebase";
 
 export const verifyAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -7,21 +7,20 @@ export const verifyAdmin = async (req: Request, res: Response, next: NextFunctio
 
     if (!token) {
       res.status(401).json({ error: "Unauthorized - Missing token" });
-      return; // ❌ FIX: Ensure no further execution
+      return;
     }
 
     // Decode the token
-    const decodedToken = await auth.verifyIdToken(token);
+    const decodedToken = await admin.auth().verifyIdToken(token);
 
     // Check if user has admin role
-    if (decodedToken.role !== "admin") {
+    if (decodedToken.customClaims?.role !== "admin") {
       res.status(403).json({ error: "Access denied - Admins only" });
-      return; // ❌ FIX: Ensure no further execution
+      return;
     }
 
-    next(); // ✅ FIX: Properly calling next() instead of returning a response
-  } catch (error) {
+    next(); // ✅ Proceed if user is admin
+  } catch (error: unknown) {
     res.status(403).json({ error: "Invalid or expired token" });
   }
 };
-

@@ -1,24 +1,25 @@
 {
   "compilerOptions": {
-      "target": "ES6",
-      "module": "commonjs",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "outDir": "./dist",
-      "resolveJsonModule": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
-      "strictFunctionTypes": true,
-      "strictPropertyInitialization": true,
-      "noImplicitThis": true,
-      "alwaysStrict": true,
-      "baseUrl": "./",
-      "paths": {
-          "*": ["*"]
-      }
+    "target": "ES6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"]  // ✅ Ensure this is included
   },
-  "include": ["src/**/*", "test/**/*", "test", "config"],
+  "include": ["src/**/*", "test/**/*", "config", "src/types/express.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

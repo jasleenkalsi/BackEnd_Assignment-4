@@ -27,3 +27,4 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     res.status(403).json({ error: "Invalid or expired token" });
   }
 };
+

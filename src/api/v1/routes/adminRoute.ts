@@ -1,15 +1,15 @@
 import express from "express";
-import { verifyAdmin } from "../middleware/authorization";
+import { authenticateUser } from "../middleware/authentication"; // ✅ Import authenticateUser
+import { verifyAdmin } from "../middleware/authorization"; // ✅ Import verifyAdmin
 import { setUserRole } from "../controllers/adminController";
-
-import { getUserDetails } from "../controllers/userController"; // ✅ Ensure correct import
- 
+import { getUserDetails } from "../controllers/userController";
 
 const router = express.Router();
 
-// ✅ Pass the controller functions directly
-router.get("/user/:uid", getUserDetails);
-router.post("/admin/set-role", verifyAdmin, setUserRole);
+// ✅ Secure user details route (only authenticated users can access)
+router.get("/user/:uid", authenticateUser, getUserDetails);
 
+// ✅ Secure role assignment (authentication + admin verification required)
+router.post("/admin/set-role", authenticateUser, verifyAdmin, setUserRole);
 
 export default router;

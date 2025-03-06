@@ -7,7 +7,7 @@ dotenv.config(); // Load environment variables
 // Initialize Firebase Admin SDK with Service Account Key
 admin.initializeApp({
     credential: admin.credential.cert(
-        path.resolve(__dirname, "../../high-risk-loan-monitorin-8ade9-firebase-adminsdk-fbsvc-751162c457 - Copy.json") // Ensure correct path
+        path.resolve(__dirname, "../../serviceAccountjson") // Ensure correct path
     ),
 });
 

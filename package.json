@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/jasleenkalsi/BackEnd_Assignment-4#readme",
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.13.9",
@@ -27,6 +28,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "firebase-admin": "^13.2.0"
   }
 }

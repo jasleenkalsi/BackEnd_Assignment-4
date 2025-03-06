@@ -6,7 +6,7 @@ import admin from "../../../../config/firebase";
  */
 export const authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const token = req.headers.authorization?.split(" ")[1]; // Extract token from Authorization header
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       res.status(401).json({ error: "Unauthorized - Missing token" });
@@ -19,10 +19,10 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     // ✅ Attach user info to request object
     req.user = {
       uid: decodedToken.uid,
-      role: decodedToken.customClaims?.role || "user", // Default role is "user"
+      role: decodedToken.customClaims?.role || "user",
     };
 
-    next(); // ✅ Proceed to the next middleware/controller
+    next();
   } catch (error) {
     res.status(403).json({ error: "Invalid or expired token" });
   }

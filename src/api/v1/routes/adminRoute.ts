@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyAdmin } from "../middleware/authorization";
 import { setUserRole } from "../controllers/adminController";
+
 import { getUserDetails } from "../controllers/userController"; // ✅ Ensure correct import
  
 

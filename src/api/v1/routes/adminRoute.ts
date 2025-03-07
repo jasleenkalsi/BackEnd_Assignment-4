@@ -6,10 +6,18 @@ import { getUserDetails } from "../controllers/userController";
 
 const router = express.Router();
 
-// ✅ Secure user details route (only authenticated users can access)
+/**
+ * @route GET /api/v1/admin/user/:uid
+ * @desc Retrieve user details
+ * @access Authenticated Users Only
+ */
 router.get("/user/:uid", authenticateUser, getUserDetails);
 
-// ✅ Secure role assignment (authentication + admin verification required)
-router.post("/admin/set-role", authenticateUser, verifyAdmin, setUserRole);
+/**
+ * @route POST /api/v1/admin/set-role
+ * @desc Assign roles to users
+ * @access Admins Only
+ */
+router.post("/set-role", authenticateUser, verifyAdmin, setUserRole);
 
 export default router;

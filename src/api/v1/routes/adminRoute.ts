@@ -1,6 +1,6 @@
 import express from "express";
-import { authenticateUser } from "../middleware/authentication"; // ✅ Import authenticateUser
-import { verifyAdmin } from "../middleware/authorization"; // ✅ Import verifyAdmin
+import { authenticateUser } from "../middleware/authentication";
+import { verifyAdmin } from "../middleware/authorization";
 import { setUserRole } from "../controllers/adminController";
 import { getUserDetails } from "../controllers/userController";
 
@@ -18,6 +18,6 @@ router.get("/user/:uid", authenticateUser, getUserDetails);
  * @desc Assign roles to users
  * @access Admins Only
  */
-router.post("/set-role", authenticateUser, verifyAdmin, setUserRole);
+router.post("/set-role", authenticateUser, verifyAdmin(["admin"]), setUserRole);
 
 export default router;

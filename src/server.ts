@@ -1,7 +1,8 @@
 import express from "express";
 import morgan from "morgan";
-import setupSwagger from "../config/swagger";
+import { setupSwagger } from "../config/swagger";
 import cors from "cors";
+// ✅ Import Swagger setup
 import loanRoutes from "./api/v1/routes/loanRoutes";
 import adminRoutes from "./api/v1/routes/adminRoute";
 import userRoutes from "./api/v1/routes/userRoutes";

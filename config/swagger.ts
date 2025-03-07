@@ -1,9 +1,8 @@
-import swaggerJsdoc from "swagger-jsdoc";
+import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { Express } from "express";
 
-// Swagger configuration
-const options: swaggerJsdoc.Options = {
+const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
@@ -14,17 +13,15 @@ const options: swaggerJsdoc.Options = {
     servers: [
       {
         url: "http://localhost:3000/api/v1",
+        description: "Local development server",
       },
     ],
   },
-  apis: ["./src/api/v1/routes/*.ts"], // Adjust path if needed
+  apis: ["./src/api/v1/routes/*.ts"], // Make sure this path is correct
 };
 
-const swaggerSpec = swaggerJsdoc(options);
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
-// ✅ Export as default function
-const setupSwagger = (app: Express) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-};
-
-export default setupSwagger; // ✅ Ensure default export
+export function setupSwagger(app: Express) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+}

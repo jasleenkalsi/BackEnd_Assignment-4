@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import adminRoutes from '../src/api/v1/routes/adminRoute';
+import errorMiddleware from '../src/api/v1/middleware/errorMiddleware'; // ✅ Import Error Middleware
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,5 +12,8 @@ app.use(morgan('dev'));
 
 // Routes
 app.use('/api/v1/admin', adminRoutes);
+
+// ✅ Correct way to use error middleware (No arrow function needed)
+app.use(errorMiddleware);
 
 export default app;

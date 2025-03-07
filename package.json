@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/jasleenkalsi/BackEnd_Assignment-4#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
@@ -31,8 +32,11 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "firebase-admin": "^13.2.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

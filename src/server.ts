@@ -1,28 +1,16 @@
-import express from "express";
-import morgan from "morgan";
-import { setupSwagger } from "../config/swagger";
-import cors from "cors";
-// ✅ Import Swagger setup
-import loanRoutes from "./api/v1/routes/loanRoutes";
-import adminRoutes from "./api/v1/routes/adminRoute";
-import userRoutes from "./api/v1/routes/userRoutes";
+import app from "./app";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+// import server type definition
+import { Server } from "http";
 
-// Middleware
-app.use(express.json());
-app.use(morgan("dev"));
-app.use(cors());
+// initialize port as either string read from .env, or 3000 by default
+const PORT: string | 3000 = process.env.PORT || 3000;
 
-// Register Routes
-app.use("/api/v1/loans", loanRoutes);
-app.use("/api/v1/admin", adminRoutes);
-app.use("/api/v1/users", userRoutes);
-
-// ✅ Setup Swagger API Documentation
-setupSwagger(app);
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// initialize server for the application to listen for requests on the specified port
+const server: Server = app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`
+    );
 });
+
+// export server for testing
+export default server;

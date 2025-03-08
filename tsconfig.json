@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs",
+    "module": "NodeNext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -16,10 +16,10 @@
     "alwaysStrict": true,
     "baseUrl": "./",
     "paths": {
-      "*": ["*"]
+      "@/*": ["./src/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"]  // ✅ Ensure this is included
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*", "test/**/*", "config", "src/types/express.d.ts"],
+  "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist"]
 }

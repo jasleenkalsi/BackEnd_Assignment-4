@@ -27,7 +27,7 @@ const authenticateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         }
         // ✅ Verify Firebase ID token
         const decodedToken = yield firebase_1.default.auth().verifyIdToken(token);
-        // ✅ Attach user info to request object
+        // ✅ Attach user info to request object (Temporary Fix)
         req.user = {
             uid: decodedToken.uid,
             role: ((_b = decodedToken.customClaims) === null || _b === void 0 ? void 0 : _b.role) || "user",

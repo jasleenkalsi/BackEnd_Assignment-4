@@ -1,23 +1,25 @@
 import express from "express";
+import morgan from "morgan";
 import cors from "cors";
+import { setupSwagger } from "../config/swagger"; // ✅ Ensure correct path
 import loanRoutes from "./api/v1/routes/loanRoutes";
 import adminRoutes from "./api/v1/routes/adminRoute";
-import { setupSwagger } from "../config/swagger"; // ✅ Make sure this matches the export
-
-// Import swagger setup
+import userRoutes from "./api/v1/routes/userRoutes"; // ✅ Ensure correct import
 
 const app = express();
+
+// Middleware
 app.use(express.json());
+app.use(morgan("dev"));
 app.use(cors());
 
-// Register routes
+// Register Routes
 app.use("/api/v1/loans", loanRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/users", userRoutes);
 
-// Setup Swagger Docs
+// ✅ Setup Swagger API Documentation
 setupSwagger(app);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+// ✅ Export app (without calling `app.listen()` here)
 export default app;

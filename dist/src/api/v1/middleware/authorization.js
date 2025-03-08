@@ -14,25 +14,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAdmin = void 0;
 const firebase_1 = __importDefault(require("../../../../config/firebase"));
-const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
-    try {
-        const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
-        if (!token) {
-            res.status(401).json({ error: "Unauthorized - Missing token" });
-            return;
+// ✅ Ensure verifyAdmin returns a middleware function
+const verifyAdmin = (allowedRoles) => {
+    return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a, _b;
+        try {
+            const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+            if (!token) {
+                res.status(401).json({ error: "Unauthorized - Missing token" });
+                return;
+            }
+            // Decode the token
+            const decodedToken = yield firebase_1.default.auth().verifyIdToken(token);
+            // Attach user to request for future use
+            req.user = {
+                uid: decodedToken.uid,
+                role: ((_b = decodedToken.customClaims) === null || _b === void 0 ? void 0 : _b.role) || "user", // Default role if missing
+            };
+            // Check if user has the required role
+            if (!allowedRoles.includes(req.user.role)) {
+                res.status(403).json({ error: "Access denied - Insufficient permissions" });
+                return;
+            }
+            next(); // ✅ Proceed if user has the required role
         }
-        // Decode the token
-        const decodedToken = yield firebase_1.default.auth().verifyIdToken(token);
-        // Check if user has admin role
-        if (((_b = decodedToken.customClaims) === null || _b === void 0 ? void 0 : _b.role) !== "admin") {
-            res.status(403).json({ error: "Access denied - Admins only" });
-            return;
+        catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Invalid or expired token";
+            res.status(403).json({ error: errorMessage });
+            return; // ✅ Ensure the function exits properly
         }
-        next(); // ✅ Proceed if user is admin
-    }
-    catch (error) {
-        res.status(403).json({ error: "Invalid or expired token" });
-    }
-});
+    });
+};
 exports.verifyAdmin = verifyAdmin;

@@ -1,64 +1,62 @@
+// loan.test.ts
 import request from "supertest";
-import app from "../src/app"; // ✅ Correct import
+import app from "../src/app";
+import admin from "firebase-admin";
 
-describe("Middleware Tests - Authentication & Authorization", () => {
-    let validUserToken: string;
-    let validOfficerToken: string;
-    let validManagerToken: string;
-    let invalidToken: string = "invalid_token";
+jest.mock("firebase-admin", () => ({
+    auth: () => ({
+        verifyIdToken: jest.fn(async (token) => {
+            if (token === "validUserToken") {
+                return { uid: "user123", role: "user" };
+            } else if (token === "validOfficerToken") {
+                return { uid: "officer123", role: "officer" };
+            } else if (token === "validManagerToken") {
+                return { uid: "manager123", role: "manager" };
+            } else {
+                throw new Error("Invalid token");
+            }
+        })
+    })
+}));
 
-    beforeAll(async () => {
-        // Mock valid tokens (Replace with actual Firebase token retrieval)
-        validUserToken = "mocked_valid_user_token";
-        validOfficerToken = "mocked_valid_officer_token";
-        validManagerToken = "mocked_valid_manager_token";
-    });
-
-    /** ✅ Authentication Middleware Tests **/
-    it("should return 401 if no token is provided", async () => {
-        const response = await request(app).get("/api/v1/protected-route");
-        expect(response.status).toBe(401);
-        expect(response.body.message).toBe("Unauthorized: No token provided.");
-    });
-
-    it("should return 401 if an invalid token is provided", async () => {
+describe("Loan Application API Tests", () => {
+    it("should allow an officer to create a loan application", async () => {
         const response = await request(app)
-            .get("/api/v1/protected-route")
-            .set("Authorization", `Bearer ${invalidToken}`);
-        expect(response.status).toBe(401);
-        expect(response.body.message).toBe("Unauthorized: Invalid token.");
+            .post("/api/v1/loan")
+            .set("Authorization", "Bearer validOfficerToken")
+            .send({ amount: 10000, term: 12, rate: 5.5, clientId: "12345" });
+
+        expect(response.status).toBe(201);
+        expect(response.body.message).toBe("Loan application submitted.");
     });
 
-    it("should allow access with a valid token", async () => {
+    it("should return error for missing fields in loan application", async () => {
         const response = await request(app)
-            .get("/api/v1/protected-route")
-            .set("Authorization", `Bearer ${validUserToken}`);
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe("Access granted.");
+            .post("/api/v1/loan")
+            .set("Authorization", "Bearer validOfficerToken")
+            .send({});
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe("Invalid loan application data.");
     });
 
-    /** ✅ Authorization Middleware Tests **/
-    it("should deny access if user role is not authorized", async () => {
+    it("should allow a manager to approve a loan", async () => {
         const response = await request(app)
-            .post("/api/v1/loans/approve")
-            .set("Authorization", `Bearer ${validUserToken}`);
-        expect(response.status).toBe(403);
-        expect(response.body.message).toBe("Forbidden: Insufficient permissions.");
-    });
+            .post("/api/v1/loan/approve")
+            .set("Authorization", "Bearer validManagerToken")
+            .send({ loanId: "12345" });
 
-    it("should allow an officer to review loans", async () => {
-        const response = await request(app)
-            .get("/api/v1/loans/review")
-            .set("Authorization", `Bearer ${validOfficerToken}`);
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe("Loan review accessed.");
-    });
-
-    it("should allow a manager to approve loans", async () => {
-        const response = await request(app)
-            .post("/api/v1/loans/approve")
-            .set("Authorization", `Bearer ${validManagerToken}`);
         expect(response.status).toBe(200);
         expect(response.body.message).toBe("Loan approved successfully.");
+    });
+
+    it("should return 404 for non-existent loan", async () => {
+        const response = await request(app)
+            .post("/api/v1/loan/approve")
+            .set("Authorization", "Bearer validManagerToken")
+            .send({ loanId: "99999" });
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toBe("Loan not found.");
     });
 });

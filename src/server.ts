@@ -1,16 +1,23 @@
 import app from "./app";
+import { Request, Response, NextFunction } from "express";
 
-// import server type definition
-import { Server } from "http";
+const PORT = process.env.PORT || 3000;
 
-// initialize port as either string read from .env, or 3000 by default
-const PORT: string | 3000 = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
 
-// initialize server for the application to listen for requests on the specified port
-const server: Server = app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`
-    );
+    // ✅ Debug: List all registered routes
+    console.log("Registered Routes:");
+    app._router.stack.forEach((r: any) => {
+        if (r.route && r.route.path) {
+            console.log(`✔ ${r.route.path}`);
+        }
+    });
 });
 
-// export server for testing
-export default server;
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Route not found." });
+});
+
+
+export default app;

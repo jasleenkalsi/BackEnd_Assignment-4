@@ -1,28 +1,12 @@
+// errorHandler.ts
 import { Request, Response, NextFunction } from "express";
 
-/**
- * Global error-handling middleware
- */
-const errorMiddleware = (err: unknown, req: Request, res: Response, next: NextFunction): void => {
-  console.error("Error Middleware:", err);
-
-  let statusCode = 500;
-  let message = "Internal Server Error";
-
-  // Handle known error types
-  if (err instanceof Error) {
-    message = err.message;
-    if ((err as any).status) {
-      statusCode = (err as any).status;
+const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error("🔥 Error: ", err.message);
+    
+    if (!res.headersSent) {
+        res.status(500).json({ message: "Internal Server Error." });
     }
-  }
-
-  res.status(statusCode).json({
-    success: false,
-    error: message,
-  });
-
-  next(); // Ensure Express continues processing
 };
 
-export default errorMiddleware;
+export default errorHandler;

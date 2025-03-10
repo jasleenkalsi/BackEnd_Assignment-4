@@ -8,7 +8,7 @@ describe("Authentication Middleware Tests", () => {
 
     beforeAll(async () => {
         // Simulate fetching a valid token (Replace with actual Firebase token retrieval)
-        validToken = "valid_mocked_firebase_token";
+        validToken = "AIzaSyC45MmwpjCB7DTsluuj-VvLl9TToZZ2ikU";
     });
 
     it("should return 401 if no token is provided", async () => {

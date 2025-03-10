@@ -15,13 +15,6 @@ app.use("/api/v1/loans", loanRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/users", userRoutes);
 
-app.get("/api/v1/trigger-error", (req, res, next) => {
-    next(new Error("Test error")); // This should trigger the global error handler
-});
-
-app.use((req, res) => {
-    res.status(404).json({ message: "Route not found." });
-});
 
 
 export default app;

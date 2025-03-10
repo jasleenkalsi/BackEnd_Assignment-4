@@ -6,3 +6,14 @@ export interface AuthenticatedRequest extends Request {
     role: string;
   };
 }
+
+// types/express.d.ts
+import * as express from "express";
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: any; // You can replace `any` with a more specific type for `user`
+        }
+    }
+}

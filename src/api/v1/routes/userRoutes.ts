@@ -1,11 +1,10 @@
-// routes/authRoutes.ts
 import express from "express";
+import { getUserDetails } from "../controllers/userController";
 import { authenticateUser } from "../middleware/authentication";
 
 const router = express.Router();
 
-router.get("/protected-route", authenticateUser, (req, res) => {
-    res.status(200).json({ message: "Access granted." });
-});
+// ✅ Only authenticated users can access this route
+router.get("/user/:uid", authenticateUser, getUserDetails);
 
 export default router;

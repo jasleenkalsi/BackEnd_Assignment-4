@@ -1,26 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import admin from "../../../../config/firebase";
-import { AuthenticatedRequest } from "../../../types/express"; // ✅ Import extended Request type
 
-export const authenticateUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      res.status(401).json({ error: "Unauthorized: No token provided." });
-      return;
+export const authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+
+        if (!token) {
+            res.status(401).json({ message: "Unauthorized: No token provided." }); // ✅ No return
+            return;
+        }
+
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        req.user = decodedToken;
+        next(); // ✅ Always call next() when successful
+    } catch (error) {
+        console.error("Authentication error:", error);
+        next(error); // ✅ Pass error to Express error handler
     }
-
-    const token = authHeader.split(" ")[1];
-    const decodedToken = await admin.auth().verifyIdToken(token);
-
-    req.user = {
-      uid: decodedToken.uid,
-      role: decodedToken.customClaims?.role || "user",
-    };
-
-    next();
-  } catch (error) {
-    console.error("❌ Authentication Error:", error);
-    res.status(403).json({ error: "Unauthorized: Invalid or expired token." });
-  }
 };

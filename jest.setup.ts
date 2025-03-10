@@ -17,6 +17,10 @@ jest.mock("firebase-admin", () => {
     };
     return {
         auth: () => auth,
-        initializeApp: jest.fn()
+        initializeApp: jest.fn(),
+        credential: {
+            cert: jest.fn()
+        },
+        apps: [{}], // ✅ Mock `admin.apps.length` so it is not undefined
     };
 });
